@@ -1,0 +1,109 @@
+# A basic .muttrc based on http://wiki.vinuxproject.org/muttrc
+
+# ====================== GENERAL ========================== 
+set mailcap_path = "~/.mailcap"
+set implicit_autoview               # Open other mime types using mailcap
+set ssl_starttls = yes
+set ssl_force_tls = yes             # Require encrypted connection
+set menu_scroll
+set smart_wrap
+set text_flowed
+
+# Use Maildir to read email locally
+set mbox_type = Maildir
+
+# Sidebar
+set sidebar_visible = yes
+set sidebar_width = 25
+set sidebar_short_path
+set sidebar_format = "%B%* %?N?%N/?%S"
+
+
+# Pager options
+bind pager k previous-line
+bind pager j next-line# Mail options
+set pager_index_lines = 15 
+set pager_context = 2
+
+set tilde                           # Show tildes to indicate EOF
+unset resolve
+unset markers
+set sleep_time = 0                  # Be fast
+set fast_reply
+set beep_new
+set quit
+unset confirmappend
+unset reply_self
+unset move
+
+# Basic mail workflow
+set use_envelope_from               # Use 'from' address for submitting messages
+set delete                          # Ask confirmation before deleting
+set forward_format = "[Fwd]: %s"
+set include
+
+# Show messages in reverse chronological order
+set sort = reverse-threads
+unset collapse_unread
+
+# Check for new messages when mutt is running (poll every 10s)
+set check_new = yes
+set timeout = 10
+set charset = utf-8
+set editor = /usr/bin/vim
+set edit_headers
+set use_from
+
+# Cache message headers and bodies locally
+set header_cache = ~/.mutt/cache/headers
+set message_cachedir = ~/.mutt/cache/bodies
+
+# ====================== PGP ========================== 
+# Opportunistic encryption/signing (only when replying to signed/encrypted) mails.
+set crypt_replyencrypt
+set crypt_replysign
+set crypt_replysignencrypted
+set pgp_autosign = yes          # Sign all outgoing messages 
+set pgp_show_unusable = no      # Hide revoked/expired keys
+set pgp_use_gpg_agent
+
+# Address book integration
+set query_command = "abook --mutt-query '%s'"
+
+# Mail notifications
+set new_mail_command = "notify-send 'New mail in %f' '%n new messages, %u unread' &"
+
+# Default mailbox (personal)
+source "~/.mutt/account.gmail"
+
+# Switch accounts with F2 and F3
+macro index <f2> '<sync-mailbox><enter-command>source ~/.mutt/account.gmail<enter><change-folder>!<enter>'
+macro index <f3> '<sync-mailbox><enter-command>source ~/.mutt/account.cmu<enter><change-folder>!<enter>'
+macro index <f4> '<sync-mailbox><enter-command>source ~/.mutt/account.zoho<enter><change-folder>!<enter>'
+
+# ============ Keybindings ============
+bind index - collapse-thread
+bind index _ collapse-all
+bind index,pager B sidebar-toggle-visible
+
+# Sidebar
+macro index,pager gp '<sidebar-prev><sidebar-open>'
+macro index,pager gn '<sidebar-next><sidebar-open>'
+
+bind editor <Tab> complete-query
+
+# abook doesn't understand pipe encoded messages - decode them before sending.
+macro index,pager A "<enter-command> set my_pipe_decode=\$pipe_decode pipe_decode<return> <pipe-message>abook --add-email-quiet<return> <enter-command> set pipe_decode=\$my_pipe_decode; unset my_pipe_decode<return>" "add the sender address to abook"
+
+# Colorize patches
+color body cyan default "^diff \-.*"
+color body cyan default "^index [a-f0-9].*"
+color body green default "^\-\-\- .*"
+color body green default "^[\+]{3} .*"
+color body green default "^[\+][^\+]+.*"
+color body red  default "^\-[^\-]+.*"
+color body brightblue default "^@@ .*"
+
+color index yellow default "~v~(!~N)~(!~F)"
+color index red default "~v~(~F)~(!~N)"
+color index green default "~v~(~N)"

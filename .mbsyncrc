@@ -1,0 +1,49 @@
+IMAPAccount gmail
+# Address to connect to
+Host imap.gmail.com
+User shrikantgiridhar@gmail.com
+PassCmd "pass mail/mutt"
+# Use SSL
+SSLType IMAPS
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+
+IMAPStore gmail-remote
+Account gmail
+
+MaildirStore gmail-local
+Path ~/mail/gmail/
+Inbox ~/mail/gmail/inbox
+
+MaildirStore gmail-lists
+Path ~/mail/gmail/
+Inbox ~/mail/gmail/lists/
+
+Channel sync-googlemail-default
+Master :gmail-remote:"INBOX"
+Slave :gmail-local:inbox
+
+Channel sync-googlemail-sent
+Master :gmail-remote:"[GMail]/Sent Mail"
+Slave :gmail-local:sent
+
+Channel sync-googlemail-lists-chennaipy
+Master :gmail-remote:"Lists/chennaipy"
+Slave :gmail-lists:/chennaipy
+
+Channel sync-googlemail-lists-kernelnewbies
+Master :gmail-remote:"Lists/kernelnewbies"
+Slave :gmail-lists:/kernelnewbies
+
+# Get all the channels together into a group.
+Group googlemail
+Channel sync-googlemail-default
+Channel sync-googlemail-sent
+Channel sync-googlemail-lists-chennaipy
+Channel sync-googlemail-lists-kernelnewbies
+
+# Automatically create missing mailboxes, both locally and on the server
+Create Both
+
+SyncState *
+Sync New ReNew Flags
+

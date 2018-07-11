@@ -1,0 +1,60 @@
+################################# GMAIL #####################################
+
+# Address to connect to
+IMAPAccount gmail
+Host imap.gmail.com
+User shrikantgiridhar@gmail.com
+PassCmd "pass mutt/gmail"
+SSLType IMAPS
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+
+# Associate remote server
+IMAPStore gmail-remote
+Account gmail
+
+# Associate local store with gmail-local
+MaildirStore gmail-local
+Path ~/mail/gmail/
+Inbox ~/mail/gmail/inbox
+
+MaildirStore gmail-lists
+Path ~/mail/gmail/lists/
+
+Channel sync-googlemail-default
+Master :gmail-remote:"INBOX"
+Slave :gmail-local:inbox
+
+Channel sync-googlemail-sent
+Master :gmail-remote:"[GMail]/Sent Mail"
+Slave :gmail-local:sent
+
+Channel sync-googlemail-lists-chennaipy
+Master :gmail-remote:"Lists/chennaipy"
+Slave :gmail-lists:chennaipy
+
+Channel sync-googlemail-lists-kernelnewbies
+Master :gmail-remote:"Lists/kernelnewbies"
+Slave :gmail-lists:/kernelnewbies
+
+Channel sync-googlemail-lists-dri
+Master :gmail-remote:"Lists/dri-devel"
+Slave :gmail-lists:dri-devel
+
+Channel sync-googlemail-lists-driver-devel
+Master :gmail-remote:"Lists/driver-devel"
+Slave :gmail-lists:driver-devel
+
+# Get all the channels together into a group.
+Group googlemail
+Channel sync-googlemail-default
+Channel sync-googlemail-sent
+Channel sync-googlemail-lists-chennaipy
+Channel sync-googlemail-lists-kernelnewbies
+Channel sync-googlemail-lists-dri
+Channel sync-googlemail-lists-driver-devel
+
+# Automatically create missing mailboxes, both locally and on the server
+Create Both
+Expunge Both
+
+SyncState *

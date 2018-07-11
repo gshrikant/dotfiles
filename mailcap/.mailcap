@@ -1,0 +1,4 @@
+# MIME types and programs which process those types
+
+application/pdf; lesspipe %s; copiousoutput
+text/html; lynx -dump -width=80 %s ; copiousoutput; needsterminal; nametemplate=%s.html

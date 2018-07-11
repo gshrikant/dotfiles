@@ -1,0 +1,19 @@
+[ui]
+username = gshrikant <shrikantgiridhar@gmail.com>
+merge = internal:merge3
+ssh = ssh -C
+
+[extensions]
+color = 
+hgext.convert =
+hgext.bookmarks =
+pager =
+# Install hg-git using 'pip install' before adding this
+#hggit = 
+
+[pager]
+pager = LESS='FRX' less
+
+[alias]
+# View graphical logs
+log = log -G
